@@ -28,18 +28,20 @@ def get_multiplier(value):
     Returns a multiplier based on the value.
     The multiplier is determined by the following ranges:
     """
-    if value <= 1.00:
+    if 1.00 <= value < 2_000_000.00:
         return 1.75
-    elif value <= 2000000.00:
+    elif 2_000_000.00 <= value < 4_000_000.00:
         return 1.70
-    elif value <= 4000000.00:
+    elif 4_000_000.00 <= value < 8_000_000.00:
         return 1.65
-    elif value <= 8000000.00:
+    elif 8_000_000.00 <= value < 16_000_000.00:
         return 1.60
-    elif value <= 16000000.00:
+    elif 16_000_000.00 <= value < 32_000_000.00:
         return 1.55
-    else:
+    elif value >=32_000_000.00:
         return 1.50
+    else:
+        return 1.75  # Default multiplier for values less than 1.00
     
 def process_text(text):
     """
