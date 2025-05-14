@@ -1,5 +1,31 @@
 import pyperclip
 import re
+import time
+
+def watch_clipboard(poll_interval=1.0):
+    """
+    Watches the clipboard for changes and processes the text if it changes.
+    """
+    last_text = None
+    print("Watching clipboard for changes...Press Ctrl+C to exit.")
+
+    try:
+        while True:
+            # Read the current clipboard content
+            current_text = pyperclip.paste()
+
+            # If the clipboard content has changed, process it
+            if current_text != last_text and current_text.strip():
+                # Check if the clipboard content is empty
+                last_text = current_text
+                result = process_text(current_text)
+                if result.strip():
+                    # Write the processed text back to the clipboard
+                    write_to_clipboard(result)
+                    print("Processed text copied to clipboard.")
+            time.sleep(poll_interval)
+    except KeyboardInterrupt:
+        print("\nStopped watching clipboard.")
 
 def read_clipboard():
     """Reads the content of the clipboard and returns it."""
@@ -57,28 +83,31 @@ def process_text(text):
         if value is not None:
             multiplier = get_multiplier(value)
             result = round(value * multiplier, 2)
-            processed.append(f"{line} => {result}")
+            processed.append(f"{result:.2f}")
         else:
-            processed.append(f"{line} => No valid number found")
+            continue
+        # If no number is found, keep the original line
 
     return "\n".join(processed)
 
 def main():
     """
     Main function to read from clipboard, process the numbers and write back to clipboard
+    and watch for changes.
+    This function will run indefinitely until interrupted.
     """
     try:
         text = read_clipboard()
+        if not text.strip():
+            print("Clipboard is empty. Please copy some text to the clipboard.")
+        else:
+            result = process_text(text)
+            write_to_clipboard(result)
     except pyperclip.PyperclipException:
         print("Failed to read from clipboard. Please check your clipboard access permissions.")
-        return
-    
-    if not text:
-        print("Clipboard is empty.")
-        return
-    
-    result = process_text(text)
-    write_to_clipboard(result)
+
+    # Start watching the clipboard for changes
+    watch_clipboard(poll_interval=0.5) # Adjust the poll interval as needed
 
 if __name__ == "__main__":
     main()
