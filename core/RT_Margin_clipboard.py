@@ -14,8 +14,8 @@ def write_to_clipboard(text):
     except pyperclip.PyperclipException:
         print("Failed to write to clipboard. Please check your clipboard access permissions.")
 
-def extract_numbers(text):
-    match = re.search(r"[\d]*\d\.\d+", text)
+def extract_number(text):
+    match = re.search(r"[\d']*\d\.\d+", text)
     if match:
         number_str = match.group(0).replace("'", "")
         try:
@@ -25,12 +25,8 @@ def extract_numbers(text):
         
 def get_multiplier(value):
     """
-        (32000000.00, 0.50),
-        (16000000.00, 0.55),
-        (8000000.00, 0.60),
-        (4000000.00, 0.65),
-        (2000000.00, 0.70),
-        (1.00, 0.75)
+    Returns a multiplier based on the value.
+    The multiplier is determined by the following ranges:
     """
     if value <= 1.00:
         return 1.75
@@ -47,10 +43,23 @@ def get_multiplier(value):
     
 def process_text(text):
     """
-    Todo
+    Processes the input text to extract numbers, calculate the multiplier, and format the output.
     """
-    return text
-    
+    # Extract the number from the text
+    lines = text.strip().splitlines()
+    processed = []
+
+    for line in lines:
+        value = extract_number(line)
+        # If a number is found, calculate the multiplier and format the output
+        if value is not None:
+            multiplier = get_multiplier(value)
+            result = round(value * multiplier, 2)
+            processed.append(f"{line} => {result}")
+        else:
+            processed.append(f"{line} => No valid number found")
+
+    return "\n".join(processed)
 
 def main():
     """
