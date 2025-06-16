@@ -22,7 +22,6 @@ def watch_clipboard(poll_interval=1.0):
                 if result.strip():
                     # Write the processed text back to the clipboard
                     write_to_clipboard(result)
-                    print("Processed text copied to clipboard.")
             time.sleep(poll_interval)
     except KeyboardInterrupt:
         print("\nStopped watching clipboard.")
