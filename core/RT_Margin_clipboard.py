@@ -16,7 +16,7 @@ def watch_clipboard(poll_interval=1.0):
 
             # If the clipboard content has changed, process it
             if current_text != last_text and current_text.strip():
-                # Check if the clipboard content is empty
+                # Update last_text and process the new clipboard content
                 last_text = current_text
                 result = process_text(current_text)
                 if result.strip():
