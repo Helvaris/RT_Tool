@@ -64,7 +64,7 @@ def get_multiplier(value):
         return 1.60
     elif 16_000_000.00 <= value < 32_000_000.00:
         return 1.55
-    elif value >=32_000_000.00:
+    elif value >= 32_000_000.00:
         return 1.50
     else:
         return 1.75  # Default multiplier for values less than 1.00
